@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}Lifestyle Tracking - HealthCare+{% endblock %}
+
+{% block body_class %}lifestyle-page{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Lifestyle Logging Form -->
+        <div class="col-lg-4">
+            <div class="health-card">
+                <h5><i class="fas fa-plus me-2"></i>Log Today's Activities</h5>
+                
+                <form data-api="/log-lifestyle" id="lifestyle-form">
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="sleep_hours" class="form-label">Sleep Hours</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="sleep_hours" name="sleep_hours" 
+                                   min="0" max="24" step="0.5" required>
+                            <span class="input-group-text">hours</span>
+                        </div>
+                        <div class="form-text">How many hours did you sleep?</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="exercise_minutes" class="form-label">Exercise Duration</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="exercise_minutes" name="exercise_minutes" 
+                                   min="0" max="1440" required>
+                            <span class="input-group-text">minutes</span>
+                        </div>
+                        <div class="form-text">Total exercise time today</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="water_glasses" class="form-label">Water Intake</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="water_glasses" name="water_glasses" 
+                                   min="0" max="20" required>
+                            <span class="input-group-text">glasses</span>
+                        </div>
+                        <div class="form-text">8oz glasses of water consumed</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="meals" class="form-label">Meals</label>
+                        <input type="text" class="form-control" id="meals" name="meals" 
+                               placeholder="e.g., Breakfast, Lunch, Dinner, Snacks" required>
+                        <div class="form-text">List the meals you had today</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Additional Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3" 
+                                  placeholder="How did you feel today? Any health observations?"></textarea>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Entry
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="health-card mt-4">
+                <h6><i class="fas fa-chart-bar me-2"></i>This Week's Summary</h6>
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <span class="h4 text-primary" id="week-entries">0</span>
+                            <div><small class="text-muted">Entries</small></div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-2">
+                            <span class="h4 text-success" id="week-streak">0</span>
+                            <div><small class="text-muted">Day Streak</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts and Data Visualization -->
+        <div class="col-lg-8">
+            <!-- Lifestyle Trends Chart -->
+            <div class="health-card mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5><i class="fas fa-chart-line me-2"></i>Lifestyle Trends</h5>
+                    <select class="form-select" style="width: auto;" id="chart-period">
+                        <option value="7">Last 7 Days</option>
+                        <option value="14">Last 14 Days</option>
+                        <option value="30">Last 30 Days</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="lifestyle-trends-chart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Recent Logs Table -->
+            <div class="health-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5><i class="fas fa-history me-2"></i>Activity History</h5>
+                    <button class="btn btn-outline-primary btn-sm" onclick="loadLifestyleLogs()">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh
+                    </button>
+                </div>
+                
+                <div id="lifestyle-logs-container">
+                    <div class="text-center p-4">
+                        <div class="loading"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set today's date as default
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    
+    // Load initial data
+    loadLifestyleLogs();
+    loadLifestyleChart();
+    
+    // Form submission handler
+    document.getElementById('lifestyle-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+        
+        App.showLoading();
+        
+        App.api('/log-lifestyle', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.message) {
+                App.showSuccess('Lifestyle log saved successfully!');
+                this.reset();
+                document.getElementById('date').value = new Date().toISOString().split('T')[0];
+                loadLifestyleLogs();
+                loadLifestyleChart();
+            } else {
+                App.showError(result.error || 'Failed to save log');
+            }
+        })
+        .catch(error => {
+            console.error('Save error:', error);
+            App.showError('Network error occurred');
+        })
+        .finally(() => {
+            App.hideLoading();
+        });
+    });
+    
+    // Chart period change handler
+    document.getElementById('chart-period').addEventListener('change', function() {
+        loadLifestyleChart();
+    });
+});
+
+async function loadLifestyleLogs() {
+    const container = document.getElementById('lifestyle-logs-container');
+    
+    try {
+        const response = await App.api('/lifestyle?limit=20');
+        const data = await response.json();
+        
+        if (response.ok && data.logs) {
+            renderLifestyleLogs(data.logs, container);
+            updateWeeklyStats(data.logs);
+        } else {
+            container.innerHTML = '<p class="text-warning">Unable to load logs</p>';
+        }
+    } catch (error) {
+        console.error('Load logs error:', error);
+        container.innerHTML = '<p class="text-danger">Error loading logs</p>';
+    }
+}
+
+function renderLifestyleLogs(logs, container) {
+    if (!logs || logs.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-5">
+                <i class="fas fa-chart-line text-muted" style="font-size: 3rem;"></i>
+                <h6 class="mt-3">No logs yet</h6>
+                <p class="text-muted">Start logging your daily activities to track your progress</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const tableHtml = `
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Sleep</th>
+                        <th>Exercise</th>
+                        <th>Water</th>
+                        <th>Meals</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${logs.map(log => `
+                        <tr>
+                            <td>${log.date}</td>
+                            <td>
+                                <span class="badge ${log.sleep_hours >= 7 && log.sleep_hours <= 9 ? 'bg-success' : 'bg-warning'}">
+                                    ${log.sleep_hours}h
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge ${log.exercise_minutes >= 30 ? 'bg-success' : 'bg-warning'}">
+                                    ${log.exercise_minutes}min
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge ${log.water_glasses >= 8 ? 'bg-success' : 'bg-warning'}">
+                                    ${log.water_glasses}
+                                </span>
+                            </td>
+                            <td>
+                                <small>${log.meals.length > 30 ? log.meals.substring(0, 30) + '...' : log.meals}</small>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    ${log.notes ? (log.notes.length > 30 ? log.notes.substring(0, 30) + '...' : log.notes) : 'No notes'}
+                                </small>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    container.innerHTML = tableHtml;
+}
+
+async function loadLifestyleChart() {
+    try {
+        const response = await App.api('/lifestyle_chart_data');
+        const data = await response.json();
+        
+        if (response.ok) {
+            Charts.createLifestyleChart('lifestyle-trends-chart', data);
+        }
+    } catch (error) {
+        console.error('Chart error:', error);
+    }
+}
+
+function updateWeeklyStats(logs) {
+    const thisWeek = logs.filter(log => {
+        const logDate = new Date(log.date);
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        return logDate >= weekAgo;
+    });
+    
+    document.getElementById('week-entries').textContent = thisWeek.length;
+    
+    // Calculate streak (consecutive days with logs)
+    const sortedLogs = logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+    let streak = 0;
+    let currentDate = new Date();
+    
+    for (let log of sortedLogs) {
+        const logDate = new Date(log.date);
+        const daysDiff = Math.floor((currentDate - logDate) / (1000 * 60 * 60 * 24));
+        
+        if (daysDiff === streak) {
+            streak++;
+            currentDate = logDate;
+        } else {
+            break;
+        }
+    }
+    
+    document.getElementById('week-streak').textContent = streak;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+
+{% block title %}Premium Plans - HealthCare+{% endblock %}
+
+{% block body_class %}premium-page{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <div class="d-inline-flex align-items-center justify-content-center bg-warning text-dark rounded-circle mb-3" 
+             style="width: 80px; height: 80px; font-size: 2rem;">
+            <i class="fas fa-crown"></i>
+        </div>
+        <h2 class="display-5 fw-bold">Upgrade to Premium</h2>
+        <p class="lead text-muted">Unlock advanced features and get the most out of your health journey</p>
+    </div>
+    
+    {% if user.is_premium %}
+    <!-- Premium Member Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-6">
+            <div class="alert alert-success text-center">
+                <i class="fas fa-check-circle fa-3x mb-3"></i>
+                <h4>You're a Premium Member!</h4>
+                <p class="mb-0">Thank you for supporting HealthCare+. You have access to all premium features.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Pricing Plans -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <!-- Free Plan -->
+            <div class="health-card text-center h-100">
+                <div class="mb-3">
+                    <i class="fas fa-heart text-secondary" style="font-size: 3rem;"></i>
+                </div>
+                <h4>Free Plan</h4>
+                <div class="mb-3">
+                    <span class="display-4 fw-bold">₦0</span>
+                    <span class="text-muted">/month</span>
+                </div>
+                
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Basic lifestyle tracking</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Limited AI tips (3/day)</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Weather alerts</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Basic charts</li>
+                    <li class="mb-2"><i class="fas fa-times text-muted me-2"></i>Advanced analytics</li>
+                    <li class="mb-2"><i class="fas fa-times text-muted me-2"></i>Unlimited AI chat</li>
+                </ul>
+                
+                {% if not user.is_premium %}
+                <button class="btn btn-outline-secondary" disabled>Current Plan</button>
+                {% else %}
+                <button class="btn btn-outline-secondary" disabled>Previously Used</button>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <!-- Premium Plan -->
+            <div class="health-card featured text-center h-100 position-relative">
+                <div class="position-absolute top-0 start-50 translate-middle">
+                    <span class="badge bg-warning text-dark px-3 py-2">Most Popular</span>
+                </div>
+                
+                <div class="mb-3 mt-3">
+                    <i class="fas fa-crown text-warning" style="font-size: 3rem;"></i>
+                </div>
+                <h4 class="text-white">Premium Plan</h4>
+                <div class="mb-3">
+                    <span class="display-4 fw-bold text-white">₦500</span>
+                    <span class="text-white-50">/month</span>
+                </div>
+                
+                <ul class="list-unstyled mb-4 text-white">
+                    <li class="mb-2"><i class="fas fa-check text-warning me-2"></i>Everything in Free</li>
+                    <li class="mb-2"><i class="fas fa-check text-warning me-2"></i>Unlimited AI chat</li>
+                    <li class="mb-2"><i class="fas fa-check text-warning me-2"></i>Advanced analytics</li>
+                    <li class="mb-2"><i class="fas fa-check text-warning me-2"></i>Custom health goals</li>
+                    <li class="mb-2"><i class="fas fa-check text-warning me-2"></i>Priority support</li>
+                    <li class="mb-2"><i class="fas fa-check text-warning me-2"></i>Data export</li>
+                </ul>
+                
+                {% if user.is_premium %}
+                <button class="btn btn-warning text-dark" disabled>
+                    <i class="fas fa-check me-2"></i>Current Plan
+                </button>
+                {% else %}
+                <button class="btn btn-warning text-dark" onclick="initiatePremiumPayment()">
+                    <i class="fas fa-crown me-2"></i>Upgrade Now
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <!-- Professional Plan -->
+            <div class="health-card text-center h-100">
+                <div class="mb-3">
+                    <i class="fas fa-user-md text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h4>Professional</h4>
+                <div class="mb-3">
+                    <span class="display-4 fw-bold">₦1,000</span>
+                    <span class="text-muted">/month</span>
+                </div>
+                
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Everything in Premium</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Health professional tools</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Client management</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Custom branding</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>API access</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i>White-label option</li>
+                </ul>
+                
+                <button class="btn btn-outline-primary" disabled>Coming Soon</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Features Comparison -->
+    <div class="health-card mb-5">
+        <h4 class="text-center mb-4"><i class="fas fa-list me-2"></i>Feature Comparison</h4>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th class="text-center">Free</th>
+                        <th class="text-center">Premium</th>
+                        <th class="text-center">Professional</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Lifestyle Tracking</td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>AI Health Tips</td>
+                        <td class="text-center"><span class="badge bg-secondary">3/day</span></td>
+                        <td class="text-center"><span class="badge bg-success">Unlimited</span></td>
+                        <td class="text-center"><span class="badge bg-success">Unlimited</span></td>
+                    </tr>
+                    <tr>
+                        <td>AI Chat Assistant</td>
+                        <td class="text-center"><span class="badge bg-secondary">5/day</span></td>
+                        <td class="text-center"><span class="badge bg-success">Unlimited</span></td>
+                        <td class="text-center"><span class="badge bg-success">Unlimited</span></td>
+                    </tr>
+                    <tr>
+                        <td>Advanced Analytics</td>
+                        <td class="text-center"><i class="fas fa-times text-muted"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Data Export</td>
+                        <td class="text-center"><i class="fas fa-times text-muted"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Priority Support</td>
+                        <td class="text-center"><i class="fas fa-times text-muted"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Professional Tools</td>
+                        <td class="text-center"><i class="fas fa-times text-muted"></i></td>
+                        <td class="text-center"><i class="fas fa-times text-muted"></i></td>
+                        <td class="text-center"><i class="fas fa-check text-success"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- FAQ -->
+    <div class="health-card">
+        <h4 class="text-center mb-4"><i class="fas fa-question-circle me-2"></i>Frequently Asked Questions</h4>
+        
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        Can I cancel my subscription anytime?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, you can cancel your subscription at any time. Your premium features will remain active until the end of your billing period.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        Is my health data secure?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Absolutely. We use enterprise-grade encryption and follow HIPAA compliance standards to protect your health data. Your information is never shared without your explicit consent.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        What payment methods do you accept?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        We accept all major credit cards, debit cards, and bank transfers through our secure payment processor Paystack. All transactions are encrypted and secure.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq4">
+                        Do you offer refunds?
+                    </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        We offer a 7-day money-back guarantee for all new premium subscriptions. If you're not satisfied, contact our support team for a full refund.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-crown me-2"></i>Upgrade to Premium
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-crown text-warning" style="font-size: 3rem;"></i>
+                    <h4 class="mt-2">Premium Plan</h4>
+                    <p class="text-muted">₦500/month - Billed monthly</p>
+                </div>
+                
+                <div class="alert alert-info">
+                    <strong>What you'll get:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Unlimited AI health chat</li>
+                        <li>Advanced health analytics</li>
+                        <li>Custom health goals</li>
+                        <li>Priority support</li>
+                        <li>Data export capabilities</li>
+                    </ul>
+                </div>
+                
+                <div id="payment-container">
+                    <!-- Payment form will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function initiatePremiumPayment() {
+    try {
+        // Get payment configuration
+        const configResponse = await App.api('/payment-config');
+        const config = await configResponse.json();
+        
+        if (config.mock_mode) {
+            // Handle mock payment
+            const result = await handleMockPayment();
+            if (result.success) {
+                showPaymentSuccess();
+            }
+        } else {
+            // Initialize Paystack payment
+            await initializePaystackPayment(config.public_key);
+        }
+    } catch (error) {
+        console.error('Payment initialization error:', error);
+        App.showError('Unable to initialize payment. Please try again.');
+    }
+}
+
+async function handleMockPayment() {
+    // Show payment modal
+    const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+    modal.show();
+    
+    // Show mock payment form
+    document.getElementById('payment-container').innerHTML = `
+        <div class="text-center">
+            <p><strong>Demo Mode</strong></p>
+            <p class="text-muted">This is a demo payment. Click continue to simulate successful payment.</p>
+            <button class="btn btn-primary" onclick="processMockPayment()">
+                <i class="fas fa-credit-card me-2"></i>Continue Demo Payment
+            </button>
+        </div>
+    `;
+    
+    return { success: false }; // Will be handled by processMockPayment
+}
+
+async function processMockPayment() {
+    try {
+        App.showLoading();
+        
+        const response = await App.api('/pay', {
+            method: 'POST',
+            body: JSON.stringify({ amount: 50000 }) // ₦500 in kobo
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.data && data.data.reference) {
+            // Verify the mock payment
+            const verifyResponse = await App.api(`/verify-payment?reference=${data.data.reference}&mock=true`);
+            const verifyData = await verifyResponse.json();
+            
+            if (verifyResponse.ok && verifyData.data && verifyData.data.status === 'success') {
+                showPaymentSuccess();
+            } else {
+                App.showError('Payment verification failed. Please try again.');
+            }
+        } else {
+            App.showError('Payment initialization failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Mock payment error:', error);
+        App.showError('Payment failed. Please try again.');
+    } finally {
+        App.hideLoading();
+    }
+}
+
+async function initializePaystackPayment(publicKey) {
+    // Initialize Paystack payment (would use Paystack's inline JS)
+    const response = await App.api('/pay', {
+        method: 'POST',
+        body: JSON.stringify({ amount: 50000 }) // ₦500 in kobo
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok && data.data) {
+        // Would open Paystack inline payment
+        window.location.href = data.data.authorization_url;
+    } else {
+        App.showError('Payment initialization failed. Please try again.');
+    }
+}
+
+function showPaymentSuccess() {
+    // Hide payment modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+    if (modal) {
+        modal.hide();
+    }
+    
+    // Show success message
+    App.showSuccess('Payment successful! Welcome to Premium!');
+    
+    // Reload page after delay
+    setTimeout(() => {
+        window.location.reload();
+    }, 2000);
+}
+</script>
+{% endblock %}

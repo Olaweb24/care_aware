@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Health Chat - HealthCare+{% endblock %}
+
+{% block body_class %}chat-page{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="health-card">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                         style="width: 60px; height: 60px;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-1">AI Health Assistant</h4>
+                        <p class="text-muted mb-0">Get personalized health advice and answers to your questions</p>
+                    </div>
+                </div>
+                
+                <!-- Chat Interface -->
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-message bot">
+                            <strong>Health Assistant</strong><br>
+                            Hello! I'm your AI health assistant. I can help you with:
+                            <ul class="mt-2 mb-0">
+                                <li>Personalized health recommendations</li>
+                                <li>Lifestyle and wellness advice</li>
+                                <li>Understanding your health data</li>
+                                <li>General health questions</li>
+                            </ul>
+                            What would you like to know?
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <form id="chat-form">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="chat-input" 
+                                       placeholder="Ask me about your health..." required>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Suggested Questions -->
+                <div class="mt-4">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Suggested Questions</h6>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-outline-secondary btn-sm suggestion-btn">
+                            How can I improve my sleep quality?
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm suggestion-btn">
+                            What's the best exercise routine for me?
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm suggestion-btn">
+                            How much water should I drink daily?
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm suggestion-btn">
+                            Tips for managing stress?
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm suggestion-btn">
+                            How to maintain a healthy diet?
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Disclaimer -->
+                <div class="alert alert-info mt-4">
+                    <small>
+                        <i class="fas fa-info-circle me-1"></i>
+                        <strong>Disclaimer:</strong> This AI assistant provides general health information and should not replace professional medical advice. 
+                        Always consult with healthcare professionals for serious health concerns.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+    const suggestionBtns = document.querySelectorAll('.suggestion-btn');
+    
+    // Handle form submission
+    chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const message = chatInput.value.trim();
+        if (message) {
+            sendMessage(message);
+        }
+    });
+    
+    // Handle suggestion buttons
+    suggestionBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const question = this.textContent.trim();
+            chatInput.value = question;
+            sendMessage(question);
+        });
+    });
+    
+    async function sendMessage(message) {
+        // Add user message to chat
+        addMessageToChat(message, 'user');
+        chatInput.value = '';
+        
+        // Add loading indicator
+        const loadingId = addLoadingMessage();
+        
+        try {
+            const response = await App.api('/chat', {
+                method: 'POST',
+                body: JSON.stringify({ message: message })
+            });
+            
+            const data = await response.json();
+            
+            // Remove loading message
+            removeLoadingMessage(loadingId);
+            
+            if (response.ok) {
+                addMessageToChat(data.response, 'bot');
+            } else {
+                addMessageToChat(data.error || 'Sorry, I encountered an error. Please try again.', 'bot');
+            }
+        } catch (error) {
+            console.error('Chat error:', error);
+            removeLoadingMessage(loadingId);
+            addMessageToChat('Sorry, I\'m having trouble connecting. Please try again later.', 'bot');
+        }
+    }
+    
+    function addMessageToChat(message, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${sender}`;
+        
+        if (sender === 'user') {
+            messageDiv.innerHTML = `<strong>You</strong><br>${App.escapeHtml(message)}`;
+        } else {
+            messageDiv.innerHTML = `<strong>Health Assistant</strong><br>${App.escapeHtml(message)}`;
+        }
+        
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    function addLoadingMessage() {
+        const loadingId = 'loading-' + Date.now();
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message bot';
+        messageDiv.id = loadingId;
+        messageDiv.innerHTML = `
+            <strong>Health Assistant</strong><br>
+            <div class="d-flex align-items-center">
+                <div class="loading me-2"></div>
+                Thinking...
+            </div>
+        `;
+        
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+        
+        return loadingId;
+    }
+    
+    function removeLoadingMessage(loadingId) {
+        const loadingMessage = document.getElementById(loadingId);
+        if (loadingMessage) {
+            loadingMessage.remove();
+        }
+    }
+    
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Auto-focus on input
+    chatInput.focus();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to HealthCare+ - Preventive Healthcare & Awareness{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Your Health, <span class="text-health-accent">Our Priority</span>
+                </h1>
+                <p class="lead mb-4">
+                    Take control of your health with personalized insights, AI-powered recommendations, 
+                    and comprehensive lifestyle tracking. Start your journey to better health today.
+                </p>
+                <div class="d-flex gap-3 mb-4">
+                    <a href="/register" class="btn btn-primary btn-lg">
+                        <i class="fas fa-rocket me-2"></i>Get Started Free
+                    </a>
+                    <a href="#features" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-info-circle me-2"></i>Learn More
+                    </a>
+                </div>
+                <div class="d-flex gap-4 text-center">
+                    <div>
+                        <h3 class="fw-bold">10K+</h3>
+                        <small class="text-light opacity-75">Happy Users</small>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold">24/7</h3>
+                        <small class="text-light opacity-75">AI Support</small>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold">100%</h3>
+                        <small class="text-light opacity-75">Secure</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="position-relative">
+                    <i class="fas fa-heartbeat text-white" style="font-size: 15rem; opacity: 0.1;"></i>
+                    <div class="position-absolute top-50 start-50 translate-middle">
+                        <i class="fas fa-user-md text-white" style="font-size: 8rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Comprehensive Health Management</h2>
+            <p class="lead text-muted">Everything you need to maintain and improve your health</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5>Lifestyle Tracking</h5>
+                    <p class="text-muted">
+                        Monitor your sleep, exercise, nutrition, and hydration with intuitive logging 
+                        and beautiful visualizations.
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Sleep quality monitoring</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Exercise tracking</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Nutrition logging</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Hydration reminders</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h5>AI Health Assistant</h5>
+                    <p class="text-muted">
+                        Get personalized health recommendations powered by advanced AI that learns 
+                        from your lifestyle patterns.
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Personalized tips</li>
+                        <li><i class="fas fa-check text-success me-2"></i>24/7 chat support</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Smart insights</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Preventive care advice</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud-sun"></i>
+                    </div>
+                    <h5>Weather-Based Alerts</h5>
+                    <p class="text-muted">
+                        Receive location-based health alerts and recommendations based on current 
+                        weather conditions and environmental factors.
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Weather health risks</li>
+                        <li><i class="fas fa-check text-success me-2"></i>UV index warnings</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Air quality alerts</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Seasonal advice</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h5>Preventive Care</h5>
+                    <p class="text-muted">
+                        Focus on prevention with regular health screenings reminders, 
+                        vaccination schedules, and wellness check-ups.
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Health reminders</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Screening schedules</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Wellness goals</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Progress tracking</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h5>Mobile Optimized</h5>
+                    <p class="text-muted">
+                        Access your health data anywhere, anytime with our responsive design 
+                        that works perfectly on all devices.
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Responsive design</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Fast loading</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Offline support</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Cross-platform</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h5>Secure & Private</h5>
+                    <p class="text-muted">
+                        Your health data is protected with enterprise-grade security and 
+                        privacy measures. Your data belongs to you.
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>End-to-end encryption</li>
+                        <li><i class="fas fa-check text-success me-2"></i>HIPAA compliant</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Data ownership</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Regular audits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">How It Works</h2>
+            <p class="lead text-muted">Get started in just 3 simple steps</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 text-center">
+                <div class="mb-4">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px; font-size: 2rem;">
+                        <span>1</span>
+                    </div>
+                </div>
+                <h4>Create Your Profile</h4>
+                <p class="text-muted">
+                    Sign up and complete your health profile with basic information about 
+                    your lifestyle, goals, and preferences.
+                </p>
+            </div>
+            
+            <div class="col-lg-4 text-center">
+                <div class="mb-4">
+                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px; font-size: 2rem;">
+                        <span>2</span>
+                    </div>
+                </div>
+                <h4>Track Your Health</h4>
+                <p class="text-muted">
+                    Log your daily activities, sleep, exercise, and nutrition. 
+                    Our system learns from your patterns to provide better insights.
+                </p>
+            </div>
+            
+            <div class="col-lg-4 text-center">
+                <div class="mb-4">
+                    <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px; font-size: 2rem;">
+                        <span>3</span>
+                    </div>
+                </div>
+                <h4>Get Insights</h4>
+                <p class="text-muted">
+                    Receive personalized recommendations, health alerts, and AI-powered 
+                    insights to improve your overall well-being.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">What Our Users Say</h2>
+            <p class="lead text-muted">Real stories from real people</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="health-card text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-quote-left text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <p class="mb-4">
+                        "HealthCare+ helped me establish better sleep habits and track my fitness goals. 
+                        The AI recommendations are spot-on and really personalized."
+                    </p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 50px; height: 50px;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="text-start">
+                            <h6 class="mb-0">Sarah Johnson</h6>
+                            <small class="text-muted">Fitness Enthusiast</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="health-card text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-quote-left text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <p class="mb-4">
+                        "The weather-based health alerts are amazing! I never realized how much 
+                        environmental factors affected my daily routine until I started using this app."
+                    </p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 50px; height: 50px;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="text-start">
+                            <h6 class="mb-0">Michael Chen</h6>
+                            <small class="text-muted">Outdoor Worker</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="health-card text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-quote-left text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <p class="mb-4">
+                        "As a busy professional, HealthCare+ helps me stay on top of my health goals. 
+                        The dashboard gives me a clear overview of my progress."
+                    </p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                             style="width: 50px; height: 50px;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="text-start">
+                            <h6 class="mb-0">Emily Rodriguez</h6>
+                            <small class="text-muted">Business Executive</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-4">Ready to Start Your Health Journey?</h2>
+        <p class="lead mb-4">
+            Join thousands of users who have already improved their health with HealthCare+
+        </p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="/register" class="btn btn-light btn-lg">
+                <i class="fas fa-user-plus me-2"></i>Sign Up Free
+            </a>
+            <a href="/login" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-sign-in-alt me-2"></i>Login
+            </a>
+        </div>
+        <p class="mt-3 mb-0">
+            <small>No credit card required • Free forever plan available</small>
+        </p>
+    </div>
+</section>
+{% endblock %}

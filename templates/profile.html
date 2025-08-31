@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - HealthCare+{% endblock %}
+
+{% block body_class %}profile-page{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="health-card">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                         style="width: 80px; height: 80px; font-size: 2rem;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h2 class="mb-1">{{ user.name }}</h2>
+                        <p class="text-muted mb-0">{{ user.email }}</p>
+                        <small class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {% if user.is_premium %}Premium Member{% else %}Free Member{% endif %}
+                        </small>
+                    </div>
+                    {% if not user.is_premium %}
+                    <div class="ms-auto">
+                        <a href="/premium" class="btn btn-outline-primary">
+                            <i class="fas fa-crown me-1"></i>Upgrade to Premium
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <nav>
+                    <div class="nav nav-tabs" id="profileTabs" role="tablist">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-info">
+                            <i class="fas fa-user me-1"></i>Profile Info
+                        </button>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#health-profile">
+                            <i class="fas fa-heartbeat me-1"></i>Health Profile
+                        </button>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#account-settings">
+                            <i class="fas fa-cog me-1"></i>Settings
+                        </button>
+                    </div>
+                </nav>
+                
+                <div class="tab-content mt-4">
+                    <!-- Profile Information Tab -->
+                    <div class="tab-pane fade show active" id="profile-info">
+                        <h5><i class="fas fa-info-circle me-2"></i>Account Information</h5>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted">Full Name</label>
+                                    <p class="h6">{{ user.name }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted">Email Address</label>
+                                    <p class="h6">{{ user.email }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted">Member Since</label>
+                                    <p class="h6">{{ user.created_at[:10] }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted">Account Type</label>
+                                    <p class="h6">
+                                        {% if user.is_premium %}
+                                            <span class="badge bg-primary">Premium</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Free</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Health Profile Tab -->
+                    <div class="tab-pane fade" id="health-profile">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5><i class="fas fa-heartbeat me-2"></i>Health Profile</h5>
+                            <button class="btn btn-outline-primary btn-sm" onclick="toggleEditMode()">
+                                <i class="fas fa-edit me-1"></i>Edit Profile
+                            </button>
+                        </div>
+                        
+                        <form id="health-profile-form" data-api="/profile" data-method="PUT">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Age</label>
+                                    <input type="number" class="form-control" name="age" 
+                                           value="{{ profile.age if profile else '' }}" disabled>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Gender</label>
+                                    <select class="form-select" name="gender" disabled>
+                                        <option value="">Select gender</option>
+                                        <option value="male" {% if profile and profile.gender == 'male' %}selected{% endif %}>Male</option>
+                                        <option value="female" {% if profile and profile.gender == 'female' %}selected{% endif %}>Female</option>
+                                        <option value="other" {% if profile and profile.gender == 'other' %}selected{% endif %}>Other</option>
+                                        <option value="prefer_not_to_say" {% if profile and profile.gender == 'prefer_not_to_say' %}selected{% endif %}>Prefer not to say</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" class="form-control" name="location" 
+                                           value="{{ profile.location if profile else '' }}" disabled>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Exercise Frequency</label>
+                                    <select class="form-select" name="exercise_frequency" disabled>
+                                        <option value="">Select frequency</option>
+                                        <option value="sedentary" {% if profile and profile.exercise_frequency == 'sedentary' %}selected{% endif %}>Sedentary</option>
+                                        <option value="light" {% if profile and profile.exercise_frequency == 'light' %}selected{% endif %}>Light</option>
+                                        <option value="moderate" {% if profile and profile.exercise_frequency == 'moderate' %}selected{% endif %}>Moderate</option>
+                                        <option value="active" {% if profile and profile.exercise_frequency == 'active' %}selected{% endif %}>Active</option>
+                                        <option value="very_active" {% if profile and profile.exercise_frequency == 'very_active' %}selected{% endif %}>Very Active</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Target Sleep Hours</label>
+                                    <input type="number" class="form-control" name="sleep_hours" 
+                                           value="{{ profile.sleep_hours if profile else '8' }}" 
+                                           min="4" max="12" step="0.5" disabled>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Diet Type</label>
+                                    <select class="form-select" name="diet_type" disabled>
+                                        <option value="">Select diet</option>
+                                        <option value="balanced" {% if profile and profile.diet_type == 'balanced' %}selected{% endif %}>Balanced</option>
+                                        <option value="vegetarian" {% if profile and profile.diet_type == 'vegetarian' %}selected{% endif %}>Vegetarian</option>
+                                        <option value="vegan" {% if profile and profile.diet_type == 'vegan' %}selected{% endif %}>Vegan</option>
+                                        <option value="keto" {% if profile and profile.diet_type == 'keto' %}selected{% endif %}>Ketogenic</option>
+                                        <option value="paleo" {% if profile and profile.diet_type == 'paleo' %}selected{% endif %}>Paleo</option>
+                                        <option value="mediterranean" {% if profile and profile.diet_type == 'mediterranean' %}selected{% endif %}>Mediterranean</option>
+                                        <option value="other" {% if profile and profile.diet_type == 'other' %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div id="edit-buttons" style="display: none;">
+                                <hr class="my-4">
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i>Save Changes
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="cancelEdit()">
+                                        <i class="fas fa-times me-1"></i>Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Account Settings Tab -->
+                    <div class="tab-pane fade" id="account-settings">
+                        <h5><i class="fas fa-cog me-2"></i>Account Settings</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="health-card">
+                                    <h6><i class="fas fa-bell me-2"></i>Notifications</h6>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                        <label class="form-check-label" for="emailNotifications">
+                                            Email notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="healthAlerts" checked>
+                                        <label class="form-check-label" for="healthAlerts">
+                                            Health alerts
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="weeklyReports">
+                                        <label class="form-check-label" for="weeklyReports">
+                                            Weekly reports
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="health-card">
+                                    <h6><i class="fas fa-shield-alt me-2"></i>Privacy & Security</h6>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-key me-1"></i>Change Password
+                                        </button>
+                                        <button class="btn btn-outline-info btn-sm">
+                                            <i class="fas fa-download me-1"></i>Export Data
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-trash me-1"></i>Delete Account
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleEditMode() {
+    const form = document.getElementById('health-profile-form');
+    const inputs = form.querySelectorAll('input, select');
+    const editButtons = document.getElementById('edit-buttons');
+    
+    inputs.forEach(input => {
+        input.disabled = !input.disabled;
+    });
+    
+    editButtons.style.display = editButtons.style.display === 'none' ? 'block' : 'none';
+}
+
+function cancelEdit() {
+    location.reload();
+}
+</script>
+{% endblock %}
