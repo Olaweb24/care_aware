@@ -14,6 +14,7 @@ const App = {
         this.setupEventListeners();
         this.checkAuthStatus();
         this.setupAjaxDefaults();
+        this.initTheme();
     },
     
     // Setup global event listeners
@@ -408,6 +409,52 @@ const App = {
     
     formatDateTime(date) {
         return new Date(date).toLocaleString();
+    },
+    
+    // Theme management
+    initTheme() {
+        // Get saved theme or default to light
+        const savedTheme = localStorage.getItem('healthcare-theme') || 'light';
+        this.setTheme(savedTheme);
+        
+        // Setup theme toggle button
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                this.toggleTheme();
+            });
+        }
+    },
+    
+    setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        // Update toggle button icon
+        const themeIcon = document.getElementById('themeIcon');
+        if (themeIcon) {
+            if (theme === 'dark') {
+                themeIcon.className = 'fas fa-sun';
+                themeIcon.parentElement.title = 'Switch to light mode';
+            } else {
+                themeIcon.className = 'fas fa-moon';
+                themeIcon.parentElement.title = 'Switch to dark mode';
+            }
+        }
+        
+        // Save theme preference
+        localStorage.setItem('healthcare-theme', theme);
+    },
+    
+    toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        this.setTheme(newTheme);
+        
+        // Show notification
+        this.showNotification(
+            `Switched to ${newTheme} mode`, 
+            'success'
+        );
     }
 };
 
