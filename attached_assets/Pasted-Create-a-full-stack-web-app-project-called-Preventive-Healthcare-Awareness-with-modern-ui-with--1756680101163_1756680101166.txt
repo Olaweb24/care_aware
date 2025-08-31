@@ -1,0 +1,55 @@
+Create a full-stack web app project called “Preventive Healthcare & Awareness” with modern ui, with the exact requirements below. Produce a ready-to-run, beginner-friendly project that can be run locally and deployed (frontend → Vercel; backend → Railway/Render). Provide clean folder structure, all source files, requirements.txt, SQL schema, sample .env.example, and clear README deployment steps. If an API key is missing, app must run in dummy/fallback mode (rule-based tips).
+________________________________________
+Tech stack
+•	Frontend: HTML, CSS (Tailwind optional), JavaScript (vanilla). Responsive dashboard with Chart.js.
+•	Backend: Python (Flask) — REST API.
+•	Database: MySQL (use mysql-connector-python or SQLAlchemy).
+•	AI: Hugging Face Inference API (use Hugging Face text generation). Provide fallback rule-based responses when key missing.
+•	Weather: OpenWeather (free).
+•	Payments: Paystack (test keys + verification + webhook support). Provide client (inline) flow and server verification endpoints.
+•	Notifications (optional): OneSignal (include env var and stubbed code).
+•	Deployment on Railway. Include instructions for connecting front/back and environment variables.
+________________________________________
+Features / API endpoints to implement
+1.	Auth & profile
+o	POST /api/register — create user (name, email, password hashed, age, gender, location, exercise_frequency, sleep_hours, diet_type). Store in MySQL.
+o	POST /api/login — returns session cookie or JWT (choose cookies for simplicity). GET /api/logout.
+o	GET /api/profile — returns user profile (auth protected).
+2.	Lifestyle tracking
+o	POST /api/log-lifestyle — body: {sleep_hours, exercise_minutes, water_glasses, meals, notes}. Save to lifestyle_logs.
+o	GET /api/lifestyle — last N days logs.
+o	GET /api/lifestyle_chart_data — aggregated JSON for Chart.js (last 7 days).
+3.	AI tips & analysis
+o	POST /api/get-tips — uses Hugging Face model to produce personalized tips using profile + recent logs + weather. If HUGGINGFACE_API_KEY missing, return fallback tips.
+o	POST /api/chat — chatbot endpoint that sends message + user context to Hugging Face and returns answer. Fallback to canned response if no key.
+o	Use structured prompts and request JSON-like outputs (but parse safely and handle malformed responses gracefully).
+4.	Location-based alerts
+o	GET /api/weather?location=<city> — call OpenWeather, return parsed weather + simple risk indicators (heat index, rainfall risk).
+o	GET /api/alerts — combine weather + AI (or rule-based) to return actionable alerts (e.g., dehydration, malaria risk).
+5.	Payments (Paystack)
+o	Frontend: a subscription / premium button triggers Paystack inline payment using PAYSTACK_PUBLIC_KEY. Use test mode by default.
+o	Backend:
+	POST /api/pay — initialize payment by calling Paystack transaction/initialize with amount, email, and callback/reference. Return authorization URL or public data for inline flow.
+	GET /api/verify-payment?reference=<ref> — server-side verification using Paystack transaction/verify/<ref> with PAYSTACK_SECRET_KEY. On successful verification, mark user subscription status in DB and return success.
+	POST /api/paystack-webhook — accept Paystack webhook events (verify signature header if possible) and update payment records. Provide instructions for setting webhook URL on Paystack dashboard.
+o	Provide a payments.py module and integrate blueprint into app.py.
+o	Provide a dummy payment mode: if PAYSTACK keys are missing, hitting /api/pay returns a mock success reference to allow local testing.
+6.	Other
+o	Graceful error handling and logging.
+o	CORS set up so frontend on Vercel can call backend on Railway/Render.
+o	Session or JWT auth example with decorators for protected routes.
+________________________________________
+Database schema (MySQL) — provide SQL file schema.sql
+•	users:
+o	id INT AUTO_INCREMENT PRIMARY KEY
+o	name VARCHAR(150)
+o	email VARCHAR(255) UNIQUE
+o	password_hash VARCHAR(255)
+o	created_at DATETIME
+o	is_premium BOOLEAN DEFAULT FALSE
+•	profiles:
+o	user_id INT (FK users.id), age INT, gender VARCHAR(16), location VARCHAR(255), exercise_frequency VARCHAR(50), sleep_hours FLOAT, diet_type VARCHAR(50)
+•	lifestyle_logs:
+o	id INT AUTO_INCREMENT, user_id INT, date DATE, sleep_hours FLOAT, exercise_minutes INT, water_glasses INT, meals TEXT, notes TEXT, created_at DATETIME
+•	payments:
+o	id, user_id, reference, amount, currency, status, gateway_response JSON, created_at
